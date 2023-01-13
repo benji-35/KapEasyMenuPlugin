@@ -10,3 +10,6 @@ Minecraft Plugin 1.19.3 made to create easy menu with item actions
 <h5>
     <a href="https://kap35.gitbook.io/kap-easy-menu-plugin/">The documentation</a> to understand how to use the plugin
 </h5>
+<br>
+<br>
+<h5 style="color: red">Warning : This plugin is only available with Minecraft 1.19.3 or higher</h5>
