@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="KapEasyMenuPlugin:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/KapEasyMenuPlugin_jar</output-path>
+    <root id="archive" name="KapEasyMenuPlugin.jar">
+      <element id="module-output" name="KapEasyMenuPlugin" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../Tools/spigot-api-1.19.3-R0.1-20230112.085520-27-shaded.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
