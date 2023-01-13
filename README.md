@@ -4,4 +4,9 @@
 <h1 align="center">
     KapEasyMenuPlugin
 </h1>
+<h4>
 Minecraft Plugin 1.19.3 made to create easy menu with item actions
+</h4>
+<h5>
+    <a href="https://kap35.gitbook.io/kap-easy-menu-plugin/">The documentation</a> to understand how to use the plugin
+</h5>
