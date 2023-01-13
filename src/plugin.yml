@@ -2,3 +2,5 @@ name: KapEasyMenu
 main: fr.kap35.kapeasymenu.KapEasyMenu
 version: 1.0.0
 author: kap35
+website: https://kap35.gitbook.io/kap-easy-menu-plugin/
+description: A plugin to create menus easily
