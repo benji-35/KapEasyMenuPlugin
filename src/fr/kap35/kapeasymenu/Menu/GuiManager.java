@@ -1,5 +1,6 @@
 package fr.kap35.kapeasymenu.Menu;
 
+import fr.kap35.kapeasymenu.debug.Debug;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
@@ -9,16 +10,21 @@ import java.util.Map;
 
 public class GuiManager {
 
+    Debug debug;
     Map<String, GuiMenu> menus = new HashMap<>();
+
+    public GuiManager() {
+        debug = new Debug();
+    }
 
     public void registerMenus(GuiMenu menu, String name) {
         String invName = menu.getTitle();
         if (menus.containsKey(name)) {
-            System.out.println(menu.getPlugin().getDescription().getPrefix() + "Menu " + name + " already exist !");
+            debug.printErrorAddingMenu("The menu with key " + name + " already exist !");
         } else {
             for (GuiMenu menu1 : menus.values()) {
                 if (menu1.getTitle().equals(invName)) {
-                    System.out.println(menu.getPlugin().getDescription().getPrefix() + "Menu " + name + " does not have a unique title !");
+                    debug.printErrorAddingMenu("The menu with title " + invName + " already exist !");
                     return;
                 }
             }
