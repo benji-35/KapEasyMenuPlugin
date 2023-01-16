@@ -2,6 +2,7 @@ package fr.kap35.kapeasymenu.Menu;
 
 import fr.kap35.kapeasymenu.Items.GuiItem;
 import fr.kap35.kapeasymenu.Items.GuiItemPage;
+import fr.kap35.kapeasymenu.Items.IGuiItem;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -38,6 +39,10 @@ public class GuiMenu implements IGuiMenu {
     @Override
     public void openGUI(Player player) {
         if (permission.equals("") || player.hasPermission(permission)) {
+            if (items.size() == 0) {
+                player.sendMessage("Menu " + title + " is empty !");
+                return;
+            }
             __updateGUI();
             updateGUI();
             player.openInventory(gui);
@@ -59,7 +64,8 @@ public class GuiMenu implements IGuiMenu {
 
     @Override
     public void addItem(GuiItemPage item) {
-        items.add(item);
+        GuiItem nitem = new GuiItem(plugin, item.getItem(), item.getAction(), item.getSlot());
+        addItem(nitem);
     }
 
     @Override
@@ -72,8 +78,8 @@ public class GuiMenu implements IGuiMenu {
         return size;
     }
 
-    public ArrayList<GuiItem> getItems() {
-        return items;
+    public ArrayList<IGuiItem> getItems() {
+        return new ArrayList<>(this.items);
     }
 
     private void __updateGUI() {

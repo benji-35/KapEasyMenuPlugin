@@ -5,7 +5,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class GuiItem {
+public class GuiItem implements IGuiItem {
 
     private ItemStack item = null;
 
@@ -30,10 +30,12 @@ public class GuiItem {
         this.disableEvent = disableEvent;
     }
 
+    @Override
     public ItemStack getItem() {
         return item;
     }
 
+    @Override
     public int getSlot() {
         return slot;
     }
@@ -42,6 +44,7 @@ public class GuiItem {
         this.item = item;
     }
 
+    @Override
     public void setSlot(int slot) {
         this.slot = slot;
     }
@@ -53,14 +56,17 @@ public class GuiItem {
         event.setCancelled(disableEvent);
     }
 
+    @Override
     public JavaPlugin getPlugin() {
         return plugin;
     }
 
+    @Override
     public ItemGuiAction getAction() {
         return action;
     }
 
+    @Override
     public boolean isDisableEvent() {
         return disableEvent;
     }

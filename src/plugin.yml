@@ -4,3 +4,16 @@ version: 1.0.1
 author: kap35
 website: https://kap35.gitbook.io/kap-easy-menu-plugin/
 description: A plugin to create menus easily
+api-version: 1.19
+
+commands:
+  menuExists:
+    description: Check if a menu exists
+    usage: /menuExists <menuName>
+    permission: kapeasymenu.menuExists
+    permission-message: You don't have the permission to use this command
+  menuList:
+    description: List all menus
+    usage: /menuList
+    permission: kapeasymenu.menuList
+    permission-message: You don't have the permission to use this command

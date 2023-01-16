@@ -60,4 +60,8 @@ public class GuiManager {
             }
         }
     }
+
+    public boolean menuExists(String name) {
+        return menus.containsKey(name);
+    }
 }
