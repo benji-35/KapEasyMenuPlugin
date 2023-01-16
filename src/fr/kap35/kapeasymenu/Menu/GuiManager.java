@@ -12,9 +12,16 @@ public class GuiManager {
     Map<String, GuiMenu> menus = new HashMap<>();
 
     public void registerMenus(GuiMenu menu, String name) {
+        String invName = menu.getTitle();
         if (menus.containsKey(name)) {
-            System.out.println("Menu " + name + " already exist !");
+            System.out.println(menu.getPlugin().getDescription().getPrefix() + "Menu " + name + " already exist !");
         } else {
+            for (GuiMenu menu1 : menus.values()) {
+                if (menu1.getTitle().equals(invName)) {
+                    System.out.println(menu.getPlugin().getDescription().getPrefix() + "Menu " + name + " does not have a unique title !");
+                    return;
+                }
+            }
             menus.put(name, menu);
         }
     }
