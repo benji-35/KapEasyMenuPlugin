@@ -36,7 +36,7 @@ public class GuiManager {
         if (menus.containsKey(name)) {
             menus.get(name).openGUI(player);
         } else {
-            System.out.println("Menu " + name + " not found !");
+            debug.printErrorMenuNotFound(name);
         }
     }
 
@@ -44,7 +44,7 @@ public class GuiManager {
         if (menus.containsKey(name)) {
             return menus.get(name);
         } else {
-            System.out.println("Menu " + name + " not found !");
+            debug.printErrorMenuNotFound(name);
             return null;
         }
     }
