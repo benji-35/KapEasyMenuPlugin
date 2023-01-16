@@ -11,18 +11,18 @@ import java.util.Map;
 public class GuiManager {
 
     Debug debug;
-    Map<String, GuiMenu> menus = new HashMap<>();
+    Map<String, IGuiMenu> menus = new HashMap<>();
 
     public GuiManager() {
         debug = new Debug();
     }
 
-    public void registerMenus(GuiMenu menu, String name) {
+    public void registerMenus(IGuiMenu menu, String name) {
         String invName = menu.getTitle();
         if (menus.containsKey(name)) {
             debug.printErrorAddingMenu("The menu with key " + name + " already exist !");
         } else {
-            for (GuiMenu menu1 : menus.values()) {
+            for (IGuiMenu menu1 : menus.values()) {
                 if (menu1.getTitle().equals(invName)) {
                     debug.printErrorAddingMenu("The menu with title " + invName + " already exist !");
                     return;
@@ -33,14 +33,14 @@ public class GuiManager {
     }
 
     public void openMenu(Player player, String name) {
-        if (menus.containsKey(name)) {
+        if (menus.containsKey(name) && menus.get(name) != null) {
             menus.get(name).openGUI(player);
         } else {
             debug.printErrorMenuNotFound(name);
         }
     }
 
-    public GuiMenu getMenu(String name) {
+    public IGuiMenu getMenu(String name) {
         if (menus.containsKey(name)) {
             return menus.get(name);
         } else {
@@ -49,12 +49,12 @@ public class GuiManager {
         }
     }
 
-    public ArrayList<GuiMenu> getMenus() {
+    public ArrayList<IGuiMenu> getMenus() {
         return new ArrayList<>(menus.values());
     }
 
     public void checkMenusActions(InventoryClickEvent event) {
-        for (GuiMenu menu : getMenus()) {
+        for (IGuiMenu menu : getMenus()) {
             if (menu.getTitle().equals(event.getView().getTitle())) {
                 menu.checkAction(event);
             }

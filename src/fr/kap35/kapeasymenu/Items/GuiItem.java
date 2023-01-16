@@ -53,6 +53,18 @@ public class GuiItem {
         event.setCancelled(disableEvent);
     }
 
+    public JavaPlugin getPlugin() {
+        return plugin;
+    }
+
+    public ItemGuiAction getAction() {
+        return action;
+    }
+
+    public boolean isDisableEvent() {
+        return disableEvent;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof GuiItem)) {
