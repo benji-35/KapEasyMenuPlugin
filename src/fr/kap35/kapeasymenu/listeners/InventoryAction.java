@@ -7,11 +7,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
-public class inventoryAction implements Listener {
+public class InventoryAction implements Listener {
 
     KapEasyMenu plugin;
 
-    public inventoryAction(KapEasyMenu plugin) {
+    public InventoryAction(KapEasyMenu plugin) {
         this.plugin = plugin;
     }
 

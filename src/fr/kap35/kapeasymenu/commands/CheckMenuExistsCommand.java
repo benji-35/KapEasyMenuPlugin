@@ -1,7 +1,6 @@
 package fr.kap35.kapeasymenu.commands;
 
 import fr.kap35.kapeasymenu.Menu.GuiManager;
-import fr.kap35.kapeasymenu.Menu.GuiMenu;
 import fr.kap35.kapeasymenu.Menu.IGuiMenu;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -9,9 +8,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
-public class checkMenuExistsCommand implements CommandExecutor {
+public class CheckMenuExistsCommand implements CommandExecutor {
     GuiManager guiManager;
-    public checkMenuExistsCommand(GuiManager guiManager) {
+    public CheckMenuExistsCommand(GuiManager guiManager) {
         this.guiManager = guiManager;
     }
 
