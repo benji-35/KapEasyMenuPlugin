@@ -6,6 +6,7 @@ import fr.kap35.kapeasymenu.Menu.IGuiMenu;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 
 public class InventoryAction implements Listener {
 
@@ -24,5 +25,10 @@ public class InventoryAction implements Listener {
                 menu.checkAction(event);
             }
         }
+    }
+
+    @EventHandler
+    public void onInevntoryClose(InventoryCloseEvent event) {
+
     }
 }
