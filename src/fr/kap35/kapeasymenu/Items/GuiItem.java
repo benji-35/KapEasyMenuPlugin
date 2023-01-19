@@ -30,6 +30,11 @@ public class GuiItem implements IGuiItem {
         item = new ItemStack(material, 1);
     }
 
+    public GuiItem(Material material) {
+        this.plugin = null;
+        item = new ItemStack(material, 1);
+    }
+
     @Override
     public ItemStack getItem() {
         return item;

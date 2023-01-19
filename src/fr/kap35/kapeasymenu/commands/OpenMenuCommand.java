@@ -4,9 +4,13 @@ import fr.kap35.kapeasymenu.Menu.GuiManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
-public class OpenMenuCommand implements CommandExecutor {
+import java.util.ArrayList;
+import java.util.List;
+
+public class OpenMenuCommand implements CommandExecutor, TabCompleter {
     GuiManager guiManager;
 
     public OpenMenuCommand(GuiManager guiManager) {
@@ -42,5 +46,25 @@ public class OpenMenuCommand implements CommandExecutor {
         }
         guiManager.openMenu(player, menuName.toString());
         return true;
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command cmd, String s, String[] args) {
+        String menuName = "";
+        for (int i = 0; i < args.length; i++) {
+            if (i < args.length - 1) {
+                menuName += args[i] + " ";
+            } else {
+                menuName += args[i];
+            }
+        }
+        ArrayList<String> allNames = guiManager.getAllMenuKeys();
+        ArrayList<String> names = new ArrayList<>();
+        for (String name : allNames) {
+            if (name.toLowerCase().startsWith(menuName.toLowerCase())) {
+                names.add(name);
+            }
+        }
+        return names;
     }
 }

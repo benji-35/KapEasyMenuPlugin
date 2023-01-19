@@ -21,6 +21,7 @@ public class KapEasyMenu extends JavaPlugin {
         getCommand("menuExists").setExecutor(new CheckMenuExistsCommand(guiManager));
         getCommand("menuList").setExecutor(new ListMenusCommand(guiManager));
         getCommand("openMenu").setExecutor(new OpenMenuCommand(guiManager));
+        getCommand("openMenu").setTabCompleter(new OpenMenuCommand(guiManager));
         getServer().getPluginManager().registerEvents(new InventoryAction(this), this);
 
         Bukkit.getConsoleSender().sendMessage(ChatColor.DARK_BLUE + "[KapEasyMenu] " + ChatColor.GREEN + "Plugin enabled !");

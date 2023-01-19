@@ -34,6 +34,7 @@ public class GuiManager {
     }
 
     public void openMenu(Player player, String name) {
+        player.closeInventory();
         if (menus.containsKey(name) && menus.get(name) != null) {
             menus.get(name).openGUI(player);
         } else {
@@ -53,6 +54,8 @@ public class GuiManager {
     public ArrayList<IGuiMenu> getMenus() {
         return new ArrayList<>(menus.values());
     }
+
+    public ArrayList<String> getAllMenuKeys() { return new ArrayList<>(menus.keySet()); }
 
     public void checkMenusActions(InventoryClickEvent event) {
         for (IGuiMenu menu : getMenus()) {
