@@ -17,3 +17,8 @@ commands:
     usage: /menuList
     permission: kapeasymenu.menuList
     permission-message: You don't have the permission to use this command
+  openMenu:
+    description: Open a menu
+    usage: /openMenu <menuName>
+    permission: kapeasymenu.openMenu
+    permission-message: You don't have the permission to use this command

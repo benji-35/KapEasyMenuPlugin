@@ -40,7 +40,7 @@ public class ListMenusCommand implements CommandExecutor {
                 break;
             }
             IGuiMenu menu = menus.get(i);
-            Sender.sendMessage("§6" + menu.getTitle() + "§7: size=" + menu.getSize() + "§7, " + menu.getItems().size() + "§7 items");
+            Sender.sendMessage("§6" + menu.getTitle() + "§7: size=" + menu.getSize() + "§7, " + menu.getItems().size() + "§7 items" + "§7, readers=" + menu.getReaderAmount());
         }
         return true;
     }

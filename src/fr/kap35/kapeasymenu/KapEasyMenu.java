@@ -3,6 +3,7 @@ package fr.kap35.kapeasymenu;
 import fr.kap35.kapeasymenu.Menu.GuiManager;
 import fr.kap35.kapeasymenu.commands.CheckMenuExistsCommand;
 import fr.kap35.kapeasymenu.commands.ListMenusCommand;
+import fr.kap35.kapeasymenu.commands.OpenMenuCommand;
 import fr.kap35.kapeasymenu.listeners.InventoryAction;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -19,6 +20,7 @@ public class KapEasyMenu extends JavaPlugin {
 
         getCommand("menuExists").setExecutor(new CheckMenuExistsCommand(guiManager));
         getCommand("menuList").setExecutor(new ListMenusCommand(guiManager));
+        getCommand("openMenu").setExecutor(new OpenMenuCommand(guiManager));
         getServer().getPluginManager().registerEvents(new InventoryAction(this), this);
 
         Bukkit.getConsoleSender().sendMessage(ChatColor.DARK_BLUE + "[KapEasyMenu] " + ChatColor.GREEN + "Plugin enabled !");

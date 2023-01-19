@@ -2,46 +2,92 @@ package fr.kap35.kapeasymenu.Menu;
 
 import fr.kap35.kapeasymenu.Items.BasicItemsGui;
 import fr.kap35.kapeasymenu.Items.GuiItem;
-import fr.kap35.kapeasymenu.Items.GuiItemPage;
 import fr.kap35.kapeasymenu.Items.IGuiItem;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class GuiMenuPages implements IGuiMenu {
+    List<Map<Integer, GuiItem>> pages = new ArrayList<>();
+    Map<Player, List<Map<Integer, GuiItem>>> pagesTmp = new HashMap<>();
+    Map<Player, Integer> readers = new HashMap<>();
+    List<Player> switchingPage = new ArrayList<>();
+    Inventory gui = null;
+    String title;
+    int size;
+    boolean isStatic;
+    protected JavaPlugin plugin;
+    boolean isTmpAdding = false;
+    boolean displayPageNumber = true;
+    Player tmpPlayer = null;
 
-    List<GuiItemPage> items = new ArrayList<>();
-    private Inventory gui;
-    private String permission = "";
-
-    private JavaPlugin plugin;
-
-    private String title = "";
-    private int size = 0;
-    private int page = 0;
-    private int maxPage = 0;
-
-    public GuiMenuPages(JavaPlugin plugin, int size, String title) {
-        this.plugin = plugin;
+    public GuiMenuPages(JavaPlugin plugin, String title, int size, boolean isStatic) {
         this.title = title;
         this.size = size + 9;
-        this.gui = Bukkit.createInventory(null, this.size, title);
-        initGUI();
+        this.isStatic = isStatic;
+        this.plugin = plugin;
+        gui = Bukkit.createInventory(null, this.size, title);
+        pages.add(new HashMap<>()); //add first page automatically
+        onInit();
     }
 
-    protected void initGUI() {}
-
-    protected void updateGUI() {
-
+    public GuiMenuPages(JavaPlugin plugin, String title, int size) {
+        this(plugin, title, size, true);
     }
 
-    protected JavaPlugin getPlugin() {
-        return plugin;
+    @Override
+    public void addItem(IGuiItem item, int slot, int page) {
+        if (!isTmpAdding) {
+            int tmpPage = 0;
+            while (pages.size() < page + 1) {
+                pages.add(new HashMap<Integer, GuiItem>());
+                Bukkit.getConsoleSender().sendMessage("§c[§4KapEasyMenu§c] §4Page " + tmpPage + " not found, creating it. Creating until page " + page);
+                tmpPage++;
+            }
+            if (pages.get(page).containsKey(slot)) {
+                Bukkit.getConsoleSender().sendMessage("§c[§4KapEasyMenu§c] §4Slot already used, replacing item");
+                pages.get(page).remove(slot);
+            }
+            pages.get(page).put(slot, (GuiItem) item);
+        } else {
+            if (pagesTmp.containsKey(tmpPlayer)) {
+                int tmpPage = 0;
+                while (pagesTmp.get(tmpPlayer).size() < page + 1) {
+                    pagesTmp.get(tmpPlayer).add(new HashMap<Integer, GuiItem>());
+                    Bukkit.getConsoleSender().sendMessage("§c[§4KapEasyMenu§c] §4Page " + tmpPage + " not found, creating it. Creating until page " + page);
+                    tmpPage++;
+                }
+                pagesTmp.get(tmpPlayer).get(page).put(slot, (GuiItem) item);
+            } else {
+                pagesTmp.put(tmpPlayer, new ArrayList<>());
+                int tmpPage = 0;
+                while (pagesTmp.get(tmpPlayer).size() < page + 1) {
+                    pagesTmp.get(tmpPlayer).add(new HashMap<Integer, GuiItem>());
+                    Bukkit.getConsoleSender().sendMessage("§c[§4KapEasyMenu§c] §4Page " + tmpPage + " not found, creating it. Creating until page " + page);
+                    tmpPage++;
+                }
+                pagesTmp.get(tmpPlayer).get(page).put(slot, (GuiItem) item);
+            }
+        }
+    }
+
+    @Override
+    public void addItem(IGuiItem item, int slot) {
+        addItem(item, slot, 0);
+    }
+
+    @Override
+    public Collection<IGuiItem> getItems() {
+        Collection<IGuiItem> items = new ArrayList<>();
+        for (Map<Integer, GuiItem> page : pages) {
+            items.addAll(page.values());
+        }
+        return items;
     }
 
     @Override
@@ -55,145 +101,181 @@ public class GuiMenuPages implements IGuiMenu {
     }
 
     @Override
-    public void addItem(GuiItem item) {
-        //add the item after last slot of all pages
-
-    }
-
-    public void addItem(GuiItem item, int page) {
-        GuiItemPage itemPage = new GuiItemPage(item, page);
-        addItem(itemPage);
+    public boolean isStatic() {
+        return isStatic;
     }
 
     @Override
-    public void addItem(GuiItemPage item) {
-        items.add(item);
-        if (item.getPage() > maxPage) {
-            maxPage = item.getPage();
-        }
+    public JavaPlugin getPlugin() {
+        return plugin;
+    }
+
+    @Override
+    public int getReaderAmount() {
+        return readers.size();
     }
 
     @Override
     public void openGUI(Player player) {
-        if (permission.equals("") || player.hasPermission(permission)) {
-            __updateGUI();
-            updateGUI();
-            player.openInventory(gui);
-        } else {
-            player.sendMessage("You don't have the permission to open this GUI !");
+        if (!readers.containsKey(player)) {
+            readers.put(player, 0);
         }
+        gui.clear();
+        int page = readers.get(player);
+        if (page >= pages.size()) {
+            page = pages.size() - 1;
+            readers.put(player, page);
+        } else if (page < 0) {
+            page = 0;
+            readers.put(player, page);
+        }
+        for (Map.Entry<Integer, GuiItem> entry : pages.get(page).entrySet()) {
+            gui.setItem(entry.getKey(), entry.getValue().getItem());
+        }
+        for (int i = size - 9; i < size; i++) {
+            gui.setItem(i, BasicItemsGui.emptySlotItem().getItem());
+            if (i == size - 9 + 3) {
+                if (page > 0) {
+                    gui.setItem(i, BasicItemsGui.previousItem(plugin).getItem());
+                }
+            } else if (i == size - 9 + 5) {
+                if (page + 1 < getTotPages(player)) {
+                    gui.setItem(i, BasicItemsGui.nextItem(plugin).getItem());
+                }
+            }
+        }
+        if (isStatic) {
+            if (displayPageNumber) {
+                gui.setItem(size - 9 + 4, BasicItemsGui.pageNumberItem(page + 1, getTotPages(player)).getItem());
+            }
+            player.openInventory(gui);
+            return;
+        }
+        Inventory guiTmp = Bukkit.createInventory(null, size, title);
+        for (Map.Entry<Integer, GuiItem> entry : pages.get(page).entrySet()) {
+            guiTmp.setItem(entry.getKey(), entry.getValue().getItem());
+        }
+        isTmpAdding = true;
+        onOpenMenu(player);
+        isTmpAdding = false;
+        for (Map.Entry<Integer, GuiItem> entry : pagesTmp.get(readers.get(player)).get(page).entrySet()) {
+            guiTmp.setItem(entry.getKey(), entry.getValue().getItem());
+        }
+        for (int i = size - 9; i < size; i++) {
+            guiTmp.setItem(i, BasicItemsGui.emptySlotItem().getItem());
+            if (i == size - 9 + 3) {
+                if (page > 0) {
+                    guiTmp.setItem(i, BasicItemsGui.previousItem(plugin).getItem());
+                }
+            } else if (i == size - 9 + 5) {
+                if (page + 1 < getTotPages(player)) {
+                    guiTmp.setItem(i, BasicItemsGui.nextItem(plugin).getItem());
+                }
+            }
+        }
+        if (displayPageNumber) {
+            guiTmp.setItem(size - 9 + 4, BasicItemsGui.pageNumberItem(page + 1, getTotPages(player)).getItem());
+        }
+        player.openInventory(guiTmp);
     }
 
     @Override
     public void openGUI(Player player, int page) {
-        if (permission.equals("") || player.hasPermission(permission)) {
-            if (page > maxPage) {
-                page = maxPage;
-            }
-            if (items.size() == 0) {
-                player.sendMessage("Menu " + title + " is empty !");
-                return;
-            }
-            this.page = page;
-            __updateGUI();
-            updateGUI();
-            player.openInventory(gui);
-        } else {
-            player.sendMessage("You don't have the permission to open this GUI !");
-        }
+        if (page < 0)
+            page = 0;
+        if (page >= pages.size())
+            page = pages.size() - 1;
+        readers.remove(player);
+        readers.put(player, page);
+        openGUI(player);
     }
 
     @Override
     public void checkAction(InventoryClickEvent event) {
-        int slot = event.getSlot();
-
-        if (slot > size * 9) {
-            event.setCancelled(true);
-            if (slot == ((size * 9) + 4)) {
-                page--;
-                openGUI((Player) event.getWhoClicked(), page);
-                return;
-            } else if (slot == ((size * 9) + 6)) {
-                page++;
-                openGUI((Player) event.getWhoClicked(), page);
-                return;
-            }
+        Player player = (Player) event.getWhoClicked();
+        int page = 0;
+        if (readers.containsKey(player)) {
+            page = readers.get(player);
         }
-
-        for (GuiItemPage item : items) {
-            if (item.getSlot() == event.getSlot() && item.getItem().equals(event.getCurrentItem())) {
-                item.runAction((Player) event.getWhoClicked(), event);
-            }
+        int slot = event.getSlot();
+        if (page < 0 || page >= pages.size()) {
+            Bukkit.getConsoleSender().sendMessage("§c[§4KapEasyMenu§c] §4Page not found");
+            player.closeInventory();
+            return;
+        }
+        if (slot == size - 9 + 3 && page > 0) {
+            previousPage(player);
+            return;
+        } else if (slot == size - 9 + 5 && page < pages.size() - 1) {
+            nextPage(player);
+            return;
+        } else if (slot >= size - 9) {
+            event.setCancelled(true);
+        }
+        if (pages.get(page).containsKey(slot)) {
+            pages.get(page).get(slot).performActions(player, event);
         }
     }
 
     @Override
-    public ArrayList<IGuiItem> getItems() {
-        return new ArrayList<>(this.items);
+    public void onOpenMenu(Player player) {
+        if (!readers.containsKey(player)) {
+            readers.put(player, 0);
+        }
     }
 
-    private void __updateGUI() {
-        gui.clear();
-        for (GuiItemPage item : items) {
-            if (item.getSlot() != -1 && item.getPage() == page) {
-                gui.setItem(item.getSlot(), item.getItem());
-            }
+    @Override
+    public void onCloseMenu(Player player) {
+        if (!switchingPage.contains(player)) {
+            readers.remove(player);
+            pagesTmp.remove(player);
+        } else {
+            switchingPage.remove(player);
         }
-        int slotStart = size - 9;
-        for (int i = 0; i < 9; i++) {
-            gui.setItem(slotStart + i, BasicItemsGui.emptySlotItem());
-        }
-        gui.setItem(slotStart + 3, BasicItemsGui.previousItem());
-        gui.setItem(slotStart + 5, BasicItemsGui.nextItem());
     }
 
-    public void appendItem(GuiItemPage item) {
-        int lastPosition = 0;
-        if (items.size() == 0) {
-            item.setSlot(lastPosition + 1);
-            item.setPage(0);
-            return;
-        }
-        for (GuiItemPage itemPage : items) {
-            int calculatedSlot = itemPage.getSlot() + (size * 9 * itemPage.getPage());
-            if (calculatedSlot > lastPosition) {
-                lastPosition = calculatedSlot;
-            }
-        }
+    @Override
+    public void onInit() {
+
+    }
+
+    public void nextPage(Player player) {
         int page = 0;
-        while (lastPosition >= size - 9) {
-            lastPosition -= size - 9;
+        if (readers.containsKey(player)) {
+            page = readers.get(player);
+        }
+        if (page < getTotPages(player)) {
             page++;
+            readers.put(player, page);
+            openGUI(player);
         }
-        item.setSlot(lastPosition + 1);
-        item.setPage(page);
-        if (page > maxPage) {
-            maxPage = page;
-        }
+        switchingPage.add(player);
     }
 
-    public void setItemsList(List<GuiItem> items) {
-        int indexCalc = 0;
+    public void previousPage(Player player) {
         int page = 0;
-
-        for (GuiItem item : items) {
-            indexCalc++;
-            if (indexCalc > size - 9) {
-                indexCalc = 0;
-                page++;
-            }
-            GuiItemPage itemPage = new GuiItemPage(item, page);
-            itemPage.setSlot(indexCalc);
-            addItem(itemPage);
+        if (readers.containsKey(player)) {
+            page = readers.get(player);
         }
-        if (page > maxPage) {
-            maxPage = page;
+        if (page > 0) {
+            page--;
+            readers.put(player, page);
+            openGUI(player);
         }
+        switchingPage.add(player);
     }
 
-    public void clearPage() {
-        items.clear();
-        maxPage = 0;
-        page = 0;
+    private int getTotPages(Player player) {
+        int tot = pages.size();
+        if (pagesTmp.containsKey(player)) {
+            if (pagesTmp.get(player).size() > tot) {
+                tot = pagesTmp.get(player).size();
+            }
+        }
+        return tot;
+    }
+
+    public void setDisplayPageNumber(boolean displayPageNumber) {
+        this.displayPageNumber = displayPageNumber;
     }
 }

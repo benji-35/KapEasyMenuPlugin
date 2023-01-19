@@ -1,12 +1,14 @@
 package fr.kap35.kapeasymenu.Items;
 
 import fr.kap35.kapeasymenu.listeners.ItemActions;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Arrays;
@@ -25,7 +27,7 @@ public class GuiItem implements IGuiItem {
 
     public GuiItem(JavaPlugin plugin, Material material) {
         this.plugin = plugin;
-        item = new ItemStack(material);
+        item = new ItemStack(material, 1);
     }
 
     @Override
@@ -61,6 +63,8 @@ public class GuiItem implements IGuiItem {
             default:
                 break;
         }
+        if (disableEvent)
+            event.setCancelled(true);
     }
 
     @Override
@@ -120,7 +124,9 @@ public class GuiItem implements IGuiItem {
         if (item  == null || item.getItemMeta() == null) {
             return this;
         }
-        item.getItemMeta().setDisplayName(name);
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName(name);
+        item.setItemMeta(meta);
         return this;
     }
 
@@ -129,7 +135,9 @@ public class GuiItem implements IGuiItem {
         if (item  == null || item.getItemMeta() == null) {
             return this;
         }
-        item.getItemMeta().setLore(Arrays.asList(lore));
+        ItemMeta meta = item.getItemMeta();
+        meta.setLore(Arrays.asList(lore));
+        item.setItemMeta(meta);
         return this;
     }
 

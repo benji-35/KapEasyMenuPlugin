@@ -3,6 +3,7 @@ package fr.kap35.kapeasymenu.Menu;
 import fr.kap35.kapeasymenu.debug.Debug;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -63,5 +64,13 @@ public class GuiManager {
 
     public boolean menuExists(String name) {
         return menus.containsKey(name);
+    }
+
+    public void onInventoryClose(InventoryCloseEvent event) {
+        for (IGuiMenu menu : getMenus()) {
+            if (menu.getTitle().equals(event.getView().getTitle())) {
+                menu.onCloseMenu((Player) event.getPlayer());
+            }
+        }
     }
 }

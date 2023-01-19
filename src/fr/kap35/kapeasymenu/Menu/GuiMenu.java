@@ -1,7 +1,6 @@
 package fr.kap35.kapeasymenu.Menu;
 
 import fr.kap35.kapeasymenu.Items.GuiItem;
-import fr.kap35.kapeasymenu.Items.GuiItemPage;
 import fr.kap35.kapeasymenu.Items.IGuiItem;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -9,63 +8,58 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.ArrayList;
+import java.util.*;
 
 public class GuiMenu implements IGuiMenu {
 
-    private int size = 0;
-    private Inventory gui;
-    private String permission = "";
-    private ArrayList<GuiItem> items = new ArrayList<>();
+    Map<Integer, GuiItem> items = new HashMap<>();
+    Map<Integer, GuiItem> itemsTmp = new HashMap<>();
+    List<Player> readers = new ArrayList<>();
+    Inventory gui = null;
+    String title;
+    int size;
+    boolean isStatic;
+    protected JavaPlugin plugin;
+    boolean isTmpAdding = false;
 
-    private JavaPlugin plugin;
-
-    private String title = "";
-
-    public GuiMenu(JavaPlugin plugin, int size, String title) {
-        this.size = size;
-        this.plugin = plugin;
+    public GuiMenu(JavaPlugin plugin, String title, int size, boolean isStatic) {
         this.title = title;
-        this.gui = Bukkit.createInventory(null, size, title);
-        initGUI();
+        this.size = size;
+        this.isStatic = isStatic;
+        this.plugin = plugin;
+        gui = Bukkit.createInventory(null, size, title);
+        onInit();
     }
 
-    protected void initGUI() {}
-
-    protected void updateGUI() {
-
+    public GuiMenu(JavaPlugin plugin, String title, int size) {
+        this(plugin, title, size, true);
     }
 
     @Override
-    public void openGUI(Player player) {
-        if (permission.equals("") || player.hasPermission(permission)) {
-            if (items.size() == 0) {
-                player.sendMessage("Menu " + title + " is empty !");
-                return;
+    public void addItem(IGuiItem item, int slot, int page) {
+        addItem(item, slot);
+    }
+
+    @Override
+    public void addItem(IGuiItem item, int slot) {
+        if (!isTmpAdding) {
+            if (items.containsKey(slot)) {
+                Bukkit.getConsoleSender().sendMessage("§c[§4KapEasyMenu§c] §4Slot already used, replacing item");
+                items.remove(slot);
             }
-            __updateGUI();
-            updateGUI();
-            player.openInventory(gui);
+            items.put(slot, (GuiItem) item);
         } else {
-            player.sendMessage("You don't have the permission to open this GUI !");
+            if (itemsTmp.containsKey(slot)) {
+                Bukkit.getConsoleSender().sendMessage("§c[§4KapEasyMenu§c] §4Slot already used, replacing item");
+                itemsTmp.remove(slot);
+            }
+            itemsTmp.put(slot, (GuiItem) item);
         }
     }
 
     @Override
-    public void openGUI(Player player, int page) {
-        openGUI(player);
-    }
-
-    @Override
-    public void addItem(GuiItem item) {
-        System.out.println("Add item : " + item.getItem().toString() + " to menu " + title);
-        items.add(item);
-    }
-
-    @Override
-    public void addItem(GuiItemPage item) {
-        GuiItem nitem = new GuiItem(plugin, item.getItem(), item.getAction(), item.getSlot());
-        addItem(nitem);
+    public Collection<IGuiItem> getItems() {
+        return new ArrayList<>(items.values());
     }
 
     @Override
@@ -78,28 +72,76 @@ public class GuiMenu implements IGuiMenu {
         return size;
     }
 
-    public ArrayList<IGuiItem> getItems() {
-        return new ArrayList<>(this.items);
+    @Override
+    public boolean isStatic() {
+        return isStatic;
     }
 
-    private void __updateGUI() {
-        gui.clear();
-        for (GuiItem item : items) {
-            if (item.getSlot() != -1) {
-                gui.setItem(item.getSlot(), item.getItem());
-            }
-        }
-    }
-
-    protected JavaPlugin getPlugin() {
+    @Override
+    public JavaPlugin getPlugin() {
         return plugin;
     }
 
+    @Override
+    public int getReaderAmount() {
+        return readers.size();
+    }
+
+    @Override
+    public void onCloseMenu(Player player) {
+        readers.remove(player);
+    }
+
+    @Override
+    public void openGUI(Player player) {
+        gui.clear();
+        readers.remove(player);
+        readers.add(player);
+        for (int i = 0; i < size; i++) {
+            if (items.containsKey(i)) {
+                gui.setItem(i, items.get(i).getItem());
+            }
+        }
+        if (isStatic) {
+            player.openInventory(gui);
+            return;
+        }
+        Inventory guiTmp = Bukkit.createInventory(null, size, title);
+        for (int i = 0; i < size; i++) {
+            if (items.containsKey(i)) {
+                guiTmp.setItem(i, items.get(i).getItem());
+            }
+        }
+        isTmpAdding = true;
+        onOpenMenu(player);
+        isTmpAdding = false;
+        for (int i = 0; i < size; i++) {
+            if (itemsTmp.containsKey(i)) {
+                guiTmp.setItem(i, itemsTmp.get(i).getItem());
+            }
+        }
+        itemsTmp.clear();
+        player.openInventory(guiTmp);
+    }
+
+    @Override
+    public void openGUI(Player player, int page) {
+        openGUI(player);
+    }
+
+    @Override
     public void checkAction(InventoryClickEvent event) {
-        for (GuiItem item : items) {
-            if (item.getSlot() == event.getSlot() && item.getItem().equals(event.getCurrentItem())) {
-                item.runAction((Player) event.getWhoClicked(), event);
+        if (event.getClickedInventory() == null) return;
+        if (event.getView().getTitle().equals(title)) {
+            if (items.containsKey(event.getSlot())) {
+                items.get(event.getSlot()).performActions((Player) event.getWhoClicked(), event);
             }
         }
     }
+
+    @Override
+    public void onOpenMenu(Player player) {}
+
+    @Override
+    public void onInit() {}
 }

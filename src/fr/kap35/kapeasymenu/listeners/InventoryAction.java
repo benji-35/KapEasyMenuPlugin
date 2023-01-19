@@ -7,6 +7,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
 
 public class InventoryAction implements Listener {
 
@@ -21,14 +22,13 @@ public class InventoryAction implements Listener {
         GuiManager manager = plugin.getGuiManager();
         for (IGuiMenu menu: manager.getMenus()) {
             if (menu.getTitle().equals(event.getView().getTitle())) {
-                event.setCancelled(true);
                 menu.checkAction(event);
             }
         }
     }
 
     @EventHandler
-    public void onInevntoryClose(InventoryCloseEvent event) {
-
+    public void onInventoryClose(InventoryCloseEvent event) {
+        plugin.getGuiManager().onInventoryClose(event);
     }
 }
