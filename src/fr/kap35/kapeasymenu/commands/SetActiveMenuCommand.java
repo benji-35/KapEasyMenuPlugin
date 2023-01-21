@@ -38,10 +38,10 @@ public class SetActiveMenuCommand implements CommandExecutor, TabCompleter {
             return true;
         }
         if (args[args.length - 1].equalsIgnoreCase("true")) {
-            menu.setEnable(true);
+            guiManager.setMenuEnable(menuName.toString(), true);
             sender.sendMessage("§aMenu " + menuName + " is now active !");
         } else if (args[args.length - 1].equalsIgnoreCase("false")) {
-            menu.setEnable(false);
+            guiManager.setMenuEnable(menuName.toString(), false);
             sender.sendMessage("§aMenu " + menuName + " is now inactive !");
         } else {
             sender.sendMessage("§cUsage: /setmenuactive <menuName> <true/false>");

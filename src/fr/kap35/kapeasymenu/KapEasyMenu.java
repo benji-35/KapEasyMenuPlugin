@@ -18,7 +18,7 @@ public class KapEasyMenu extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        guiManager = new GuiManager();
+        guiManager = new GuiManager(this);
 
         getCommand("menuExists").setExecutor(new CheckMenuExistsCommand(guiManager));
         getCommand("menuList").setExecutor(new ListMenusCommand(guiManager));

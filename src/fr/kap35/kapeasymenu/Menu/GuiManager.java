@@ -1,6 +1,8 @@
 package fr.kap35.kapeasymenu.Menu;
 
+import fr.kap35.kapeasymenu.KapEasyMenu;
 import fr.kap35.kapeasymenu.debug.Debug;
+import fr.kap35.kapeasymenu.saves.SaveSystem;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -13,9 +15,13 @@ public class GuiManager {
 
     Debug debug;
     Map<String, IGuiMenu> menus = new HashMap<>();
+    KapEasyMenu plugin;
+    SaveSystem saveSystem;
 
-    public GuiManager() {
+    public GuiManager(KapEasyMenu plugin) {
         debug = new Debug();
+        this.plugin = plugin;
+        saveSystem = new SaveSystem(plugin);
     }
 
     public void registerMenus(IGuiMenu menu, String name) {
@@ -29,6 +35,7 @@ public class GuiManager {
                     return;
                 }
             }
+            menu.setEnable(saveSystem.getStateMenu(name));
             menus.put(name, menu);
         }
     }
@@ -79,6 +86,13 @@ public class GuiManager {
             if (menu.getTitle().equals(event.getView().getTitle())) {
                 menu.onCloseMenu((Player) event.getPlayer());
             }
+        }
+    }
+
+    public void setMenuEnable(String name, boolean enable) {
+        if (menus.containsKey(name)) {
+            menus.get(name).setEnable(enable);
+            saveSystem.setStateMenu(name, enable);
         }
     }
 }
