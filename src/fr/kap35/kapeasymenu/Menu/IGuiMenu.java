@@ -34,4 +34,6 @@ public interface IGuiMenu {
     public void onOpenMenu(Player player);
     public void onCloseMenu(Player player);
     public void onInit();
+    public void setEnable(boolean enable);
+    public boolean isEnable();
 }

@@ -24,6 +24,7 @@ public class GuiMenuPages implements IGuiMenu {
     protected JavaPlugin plugin;
     boolean isTmpAdding = false;
     boolean displayPageNumber = true;
+    boolean isEnable = true;
     Player tmpPlayer = null;
 
     public GuiMenuPages(JavaPlugin plugin, String title, int size, boolean isStatic) {
@@ -237,6 +238,16 @@ public class GuiMenuPages implements IGuiMenu {
     @Override
     public void onInit() {
 
+    }
+
+    @Override
+    public void setEnable(boolean enable) {
+        this.isEnable = enable;
+    }
+
+    @Override
+    public boolean isEnable() {
+        return isEnable;
     }
 
     public void nextPage(Player player) {

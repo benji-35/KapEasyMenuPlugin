@@ -22,3 +22,8 @@ commands:
     usage: /openMenu <menuName>
     permission: kapeasymenu.openMenu
     permission-message: You don't have the permission to use this command
+  setmenuactive:
+    description: Set a menu active or inactive
+    usage: /setmenuactive <menuName> <true|false>
+    permission: kapeasymenu.setmenuactive
+    permission-message: You don't have the permission to use this command

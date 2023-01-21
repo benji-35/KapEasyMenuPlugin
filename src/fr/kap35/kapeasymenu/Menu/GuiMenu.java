@@ -21,6 +21,7 @@ public class GuiMenu implements IGuiMenu {
     boolean isStatic;
     protected JavaPlugin plugin;
     boolean isTmpAdding = false;
+    boolean isEnable = true;
 
     public GuiMenu(JavaPlugin plugin, String title, int size, boolean isStatic) {
         this.title = title;
@@ -144,4 +145,14 @@ public class GuiMenu implements IGuiMenu {
 
     @Override
     public void onInit() {}
+
+    @Override
+    public void setEnable(boolean enable) {
+        this.isEnable = enable;
+    }
+
+    @Override
+    public boolean isEnable() {
+        return isEnable;
+    }
 }

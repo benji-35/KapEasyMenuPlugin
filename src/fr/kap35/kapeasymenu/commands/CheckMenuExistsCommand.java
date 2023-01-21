@@ -48,6 +48,11 @@ public class CheckMenuExistsCommand implements CommandExecutor {
             sender.sendMessage("Title : " + menu.getTitle());
             sender.sendMessage("Size : " + menu.getSize());
             sender.sendMessage("Items : " + menu.getItems().size());
+            if (menu.isEnable()) {
+                sender.sendMessage("§2Menu is enable");
+            } else {
+                sender.sendMessage("§4Menu is disable");
+            }
         } else {
             sender.sendMessage("Menu \"" + nameMenu + "\" does not exists !");
         }

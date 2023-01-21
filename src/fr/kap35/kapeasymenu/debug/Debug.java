@@ -23,4 +23,8 @@ public class Debug {
         Bukkit.getConsoleSender().sendMessage(getPrefixPlugin() + ChatColor.RED + "Menu " + menuName + " not found !");
     }
 
+    public void printErrorOpeningMenu(String error) {
+        Bukkit.getConsoleSender().sendMessage(getPrefixPlugin() + ChatColor.RED + "Error opening menu : " + error);
+    }
+
 }

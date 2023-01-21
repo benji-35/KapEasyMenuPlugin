@@ -36,7 +36,12 @@ public class GuiManager {
     public void openMenu(Player player, String name) {
         player.closeInventory();
         if (menus.containsKey(name) && menus.get(name) != null) {
-            menus.get(name).openGUI(player);
+            IGuiMenu menu = menus.get(name);
+            if (menu.isEnable()) {
+                menu.openGUI(player);
+            } else {
+                debug.printErrorOpeningMenu("The menu with key " + name + " is disable !");
+            }
         } else {
             debug.printErrorMenuNotFound(name);
         }
