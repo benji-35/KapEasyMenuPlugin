@@ -24,6 +24,7 @@ public interface IGuiMenu {
     public boolean isStatic();
     public JavaPlugin getPlugin();
     int getReaderAmount();
+    Player[] getReaders();
 
     //actions
     public void openGUI(Player player);
@@ -36,4 +37,9 @@ public interface IGuiMenu {
     public void onInit();
     public void setEnable(boolean enable);
     public boolean isEnable();
+
+    public boolean Equals(Object obj);
+
+    public void __removeReader(Player player);
+    public void __addReader(Player player);
 }

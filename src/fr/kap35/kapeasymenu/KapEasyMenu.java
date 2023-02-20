@@ -1,6 +1,7 @@
 package fr.kap35.kapeasymenu;
 
 import fr.kap35.kapeasymenu.Menu.GuiManager;
+import fr.kap35.kapeasymenu.clock.ClockChecking;
 import fr.kap35.kapeasymenu.commands.CheckMenuExistsCommand;
 import fr.kap35.kapeasymenu.commands.ListMenusCommand;
 import fr.kap35.kapeasymenu.commands.OpenMenuCommand;
@@ -15,6 +16,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class KapEasyMenu extends JavaPlugin {
 
     GuiManager guiManager;
+    ClockChecking clockChecking;
 
     @Override
     public void onEnable() {
@@ -29,6 +31,7 @@ public class KapEasyMenu extends JavaPlugin {
         getCommand("setmenuactive").setTabCompleter(new SetActiveMenuCommand(guiManager));
         getServer().getPluginManager().registerEvents(new InventoryAction(this), this);
 
+        clockChecking = new ClockChecking(this);
         Bukkit.getConsoleSender().sendMessage(ChatColor.DARK_BLUE + "[KapEasyMenu] " + ChatColor.GREEN + "Plugin enabled !");
     }
 

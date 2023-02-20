@@ -1,5 +1,6 @@
 package fr.kap35.kapeasymenu.Menu;
 
+import com.sun.org.apache.xpath.internal.operations.Equals;
 import fr.kap35.kapeasymenu.Items.BasicItemsGui;
 import fr.kap35.kapeasymenu.Items.GuiItem;
 import fr.kap35.kapeasymenu.Items.IGuiItem;
@@ -117,6 +118,11 @@ public class GuiMenuPages implements IGuiMenu {
     }
 
     @Override
+    public Player[] getReaders() {
+        return readers.keySet().toArray(new Player[0]);
+    }
+
+    @Override
     public void openGUI(Player player) {
         if (!readers.containsKey(player)) {
             readers.put(player, 0);
@@ -221,15 +227,14 @@ public class GuiMenuPages implements IGuiMenu {
     @Override
     public void onOpenMenu(Player player) {
         if (!readers.containsKey(player)) {
-            readers.put(player, 0);
+            __addReader(player);
         }
     }
 
     @Override
     public void onCloseMenu(Player player) {
         if (!switchingPage.contains(player)) {
-            readers.remove(player);
-            pagesTmp.remove(player);
+            __removeReader(player);
         } else {
             switchingPage.remove(player);
         }
@@ -286,7 +291,35 @@ public class GuiMenuPages implements IGuiMenu {
         return tot;
     }
 
+    public int getOpenPage(Player player) {
+        int page = 0;
+        if (readers.containsKey(player)) {
+            page = readers.get(player);
+        }
+        return page;
+    }
+
     public void setDisplayPageNumber(boolean displayPageNumber) {
         this.displayPageNumber = displayPageNumber;
+    }
+
+    @Override
+    public boolean Equals(Object obj) {
+        if (obj instanceof IGuiMenu) {
+            IGuiMenu menu = (IGuiMenu) obj;
+            return menu.getTitle().equals(title) && menu.getSize() == size;
+        }
+        return false;
+    }
+
+    @Override
+    public void __removeReader(Player player) {
+        readers.remove(player);
+        pagesTmp.remove(player);
+    }
+
+    @Override
+    public void __addReader(Player player) {
+        readers.put(player, 0);
     }
 }

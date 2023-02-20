@@ -89,20 +89,25 @@ public class GuiMenu implements IGuiMenu {
     }
 
     @Override
+    public Player[] getReaders() {
+        return readers.toArray(new Player[0]);
+    }
+
+    @Override
     public void onCloseMenu(Player player) {
-        readers.remove(player);
+        __removeReader(player);
     }
 
     @Override
     public void openGUI(Player player) {
         gui.clear();
-        readers.remove(player);
-        readers.add(player);
+        __removeReader(player);
         for (int i = 0; i < size; i++) {
             if (items.containsKey(i)) {
                 gui.setItem(i, items.get(i).getItem());
             }
         }
+        onOpenMenu(player);
         if (isStatic) {
             player.openInventory(gui);
             return;
@@ -113,8 +118,6 @@ public class GuiMenu implements IGuiMenu {
                 guiTmp.setItem(i, items.get(i).getItem());
             }
         }
-        isTmpAdding = true;
-        onOpenMenu(player);
         isTmpAdding = false;
         for (int i = 0; i < size; i++) {
             if (itemsTmp.containsKey(i)) {
@@ -141,7 +144,11 @@ public class GuiMenu implements IGuiMenu {
     }
 
     @Override
-    public void onOpenMenu(Player player) {}
+    public void onOpenMenu(Player player) {
+        if (!readers.contains(player)) {
+            __addReader(player);
+        }
+    }
 
     @Override
     public void onInit() {}
@@ -154,5 +161,24 @@ public class GuiMenu implements IGuiMenu {
     @Override
     public boolean isEnable() {
         return isEnable;
+    }
+
+    @Override
+    public boolean Equals(Object obj) {
+        if (obj instanceof IGuiMenu) {
+            IGuiMenu menu = (IGuiMenu) obj;
+            return menu.getTitle().equals(title) && menu.getSize() == size;
+        }
+        return false;
+    }
+
+    @Override
+    public void __removeReader(Player player) {
+        readers.remove(player);
+    }
+
+    @Override
+    public void __addReader(Player player) {
+        readers.add(player);
     }
 }
