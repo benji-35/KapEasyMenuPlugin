@@ -1,5 +1,6 @@
 package fr.kap35.kapeasymenu;
 
+import fr.kap35.kapeasymenu.Interfaces.IGuiManager;
 import fr.kap35.kapeasymenu.Menu.GuiManager;
 import fr.kap35.kapeasymenu.clock.ClockChecking;
 import fr.kap35.kapeasymenu.commands.CheckMenuExistsCommand;
@@ -29,9 +30,9 @@ public class KapEasyMenu extends JavaPlugin {
         getCommand("openMenu").setTabCompleter(new OpenMenuCommand(guiManager));
         getCommand("setmenuactive").setExecutor(new SetActiveMenuCommand(guiManager));
         getCommand("setmenuactive").setTabCompleter(new SetActiveMenuCommand(guiManager));
-        getServer().getPluginManager().registerEvents(new InventoryAction(this), this);
+        getServer().getPluginManager().registerEvents(new InventoryAction(this, guiManager), this);
 
-        clockChecking = new ClockChecking(this);
+        clockChecking = new ClockChecking(this, guiManager);
         Bukkit.getConsoleSender().sendMessage(ChatColor.DARK_BLUE + "[KapEasyMenu] " + ChatColor.GREEN + "Plugin enabled !");
     }
 
@@ -40,7 +41,7 @@ public class KapEasyMenu extends JavaPlugin {
         Bukkit.getConsoleSender().sendMessage(ChatColor.DARK_BLUE + "[KapEasyMenu] " + ChatColor.RED + "Plugin disable !");
     }
 
-    public GuiManager getGuiManager() {
+    public IGuiManager getGuiManager() {
         return guiManager;
     }
 }

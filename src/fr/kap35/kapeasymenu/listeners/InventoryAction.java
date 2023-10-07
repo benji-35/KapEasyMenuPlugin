@@ -12,15 +12,16 @@ import org.bukkit.event.inventory.InventoryOpenEvent;
 public class InventoryAction implements Listener {
 
     KapEasyMenu plugin;
+    GuiManager guiManager;
 
-    public InventoryAction(KapEasyMenu plugin) {
+    public InventoryAction(KapEasyMenu plugin, GuiManager guiManager) {
         this.plugin = plugin;
+        this.guiManager = guiManager;
     }
 
     @EventHandler
     public void onInventoryAction(InventoryClickEvent event) {
-        GuiManager manager = plugin.getGuiManager();
-        for (IGuiMenu menu: manager.getMenus()) {
+        for (IGuiMenu menu: guiManager.getMenus()) {
             if (menu.getTitle().equals(event.getView().getTitle())) {
                 menu.checkAction(event);
             }
@@ -29,6 +30,6 @@ public class InventoryAction implements Listener {
 
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent event) {
-        plugin.getGuiManager().onInventoryClose(event);
+        guiManager.onInventoryClose(event);
     }
 }

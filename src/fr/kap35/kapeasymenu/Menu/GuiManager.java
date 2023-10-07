@@ -1,5 +1,6 @@
 package fr.kap35.kapeasymenu.Menu;
 
+import fr.kap35.kapeasymenu.Interfaces.IGuiManager;
 import fr.kap35.kapeasymenu.KapEasyMenu;
 import fr.kap35.kapeasymenu.debug.Debug;
 import fr.kap35.kapeasymenu.saves.SaveSystem;
@@ -14,7 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class GuiManager {
+public class GuiManager implements IGuiManager {
 
     Debug debug;
     Map<String, IGuiMenu> menus = new HashMap<>();
