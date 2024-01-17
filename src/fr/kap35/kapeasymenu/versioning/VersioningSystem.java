@@ -65,7 +65,7 @@ public class VersioningSystem implements IVersioningService {
         return result;
     }
 
-    public class VersionReader {
+    public static class VersionReader {
 
         private final List<String> lines;
 
