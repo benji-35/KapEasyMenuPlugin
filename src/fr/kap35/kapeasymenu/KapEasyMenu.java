@@ -54,7 +54,7 @@ public class KapEasyMenu extends JavaPlugin {
             return;
         }
         Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "/!\\" + ChatColor.DARK_BLUE + "[KapEasyMenu]" + ChatColor.YELLOW + "/!\\ " +
-                ChatColor.RESET + "plugin is not up to date, current: " + versioningService.getCurrentVersion() + ", latest: " + versioningService.isLatestVersion());
+                ChatColor.RESET + "plugin is not up to date, current: " + versioningService.getCurrentVersion().version + ", latest: " + versioningService.getLatestVersion().version);
         if (!versioningService.getDangerous().isEmpty()) {
             Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "/!\\" + ChatColor.DARK_BLUE + "[KapEasyMenu]" + ChatColor.RED + "/!\\ " +
                     "List of dangerous issues to fix with update:");

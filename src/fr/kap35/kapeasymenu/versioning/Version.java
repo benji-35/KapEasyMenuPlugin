@@ -1,25 +1,31 @@
 package fr.kap35.kapeasymenu.versioning;
 
+import org.bukkit.Bukkit;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class Version {
     public String version;
 
     public Version(String version) {
-        if (version.chars().filter(ch -> ch == '.').count() != 2)
+        if (version == null || version.chars().filter(ch -> ch == '.').count() != 2)
             version = "0.0.0";
+        version = version.trim();
         this.version = version;
     }
 
     public int getMajors() {
-        String[] data = version.split(".");
-        return Integer.parseInt(data[0]);
+        List<String> data = splitString(version, ".");
+        return Integer.parseInt(data.get(0));
     }
     public int getMinor() {
-        String[] data = version.split(".");
-        return Integer.parseInt(data[1]);
+        List<String> data = splitString(version, ".");
+        return Integer.parseInt(data.get(1));
     }
     public int getFix() {
-        String[] data = version.split(".");
-        return Integer.parseInt(data[2]);
+        List<String> data = splitString(version, ".");
+        return Integer.parseInt(data.get(2));
     }
     public boolean isBetween(Version v1, Version v2) {
         if (!v1.isBefore(this))
@@ -42,5 +48,20 @@ public class Version {
     }
     public boolean isEquals(Version v1) {
         return !isBefore(v1) && !isAfter(v1);
+    }
+
+    private List<String> splitString(String str, String splitter) {
+        List<String> result = new ArrayList<>();
+        while (!str.isEmpty()) {
+            int index = str.indexOf(splitter);
+            if (index == -1) {
+                result.add(str);
+                break;
+            }
+            String between = str.substring(0, index);
+            result.add(between);
+            str = str.substring(index + splitter.length());
+        }
+        return result;
     }
 }
