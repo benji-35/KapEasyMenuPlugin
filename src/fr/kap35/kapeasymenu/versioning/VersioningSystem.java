@@ -120,11 +120,13 @@ public class VersioningSystem implements IVersioningService {
                 return new ArrayList<>();
             for (String line : lines) {
                 if (!inKey) {
-                    if (line.startsWith("dangerous")) {
+                    if (line.startsWith(key)) {
                         inKey = true;
                     }
                     continue;
                 }
+                if (!line.startsWith(" "))
+                    continue;
                 String[] parts = line.split("&", 4);
                 if (parts.length != 4)
                     continue;
