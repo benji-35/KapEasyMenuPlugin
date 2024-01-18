@@ -1,6 +1,6 @@
 package fr.kap35.kapeasymenu.commands;
 
-import fr.kap35.kapeasymenu.Menu.GuiManager;
+import fr.kap35.kapeasymenu.menu.GuiManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

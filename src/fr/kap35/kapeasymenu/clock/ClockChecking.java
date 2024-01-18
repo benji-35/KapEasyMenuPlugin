@@ -1,7 +1,7 @@
 package fr.kap35.kapeasymenu.clock;
 
 import fr.kap35.kapeasymenu.KapEasyMenu;
-import fr.kap35.kapeasymenu.Menu.GuiManager;
+import fr.kap35.kapeasymenu.menu.GuiManager;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class ClockChecking extends BukkitRunnable {

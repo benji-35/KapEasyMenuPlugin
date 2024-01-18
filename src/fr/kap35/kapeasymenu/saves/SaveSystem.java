@@ -1,14 +1,7 @@
 package fr.kap35.kapeasymenu.saves;
 
 import fr.kap35.kapeasymenu.KapEasyMenu;
-import fr.kap35.kapeasymenu.Menu.GuiManager;
-import org.bukkit.Bukkit;
-import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
-
-import java.io.File;
-import java.io.IOException;
 
 public class SaveSystem {
 

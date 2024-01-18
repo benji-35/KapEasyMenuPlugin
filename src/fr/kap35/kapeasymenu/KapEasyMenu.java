@@ -1,13 +1,17 @@
 package fr.kap35.kapeasymenu;
 
 import fr.kap35.kapeasymenu.Interfaces.IGuiManager;
-import fr.kap35.kapeasymenu.Menu.GuiManager;
+import fr.kap35.kapeasymenu.menu.GuiManager;
 import fr.kap35.kapeasymenu.clock.ClockChecking;
 import fr.kap35.kapeasymenu.commands.CheckMenuExistsCommand;
 import fr.kap35.kapeasymenu.commands.ListMenusCommand;
 import fr.kap35.kapeasymenu.commands.OpenMenuCommand;
 import fr.kap35.kapeasymenu.commands.SetActiveMenuCommand;
 import fr.kap35.kapeasymenu.listeners.InventoryAction;
+import fr.kap35.kapeasymenu.menu.example.LegacyChest;
+import fr.kap35.kapeasymenu.menu.example.LegacyPaginationChest;
+import fr.kap35.kapeasymenu.menu.exception.CannotPlaceItemException;
+import fr.kap35.kapeasymenu.menu.exception.MenuSizeException;
 import fr.kap35.kapeasymenu.versioning.IVersioningService;
 import fr.kap35.kapeasymenu.versioning.VersioningSystem;
 import fr.kap35.kapeasymenu.versioning.dto.VersionDifferenceDto;
@@ -15,8 +19,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.File;
-import java.net.URL;
 import java.util.Objects;
 
 public class KapEasyMenu extends JavaPlugin {
@@ -29,6 +31,17 @@ public class KapEasyMenu extends JavaPlugin {
         this.saveDefaultConfig();
         versioningService = new VersioningSystem();
         guiManager = new GuiManager(this);
+
+        try {
+            guiManager.registerMenus(new LegacyChest(this), "LegacyChestMenu");
+            guiManager.registerMenus(new LegacyPaginationChest(this), "LegacyPaginationChestMenu");
+        } catch (MenuSizeException | CannotPlaceItemException e) {
+            Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "/!\\" +
+                    ChatColor.DARK_BLUE + "[KapEasyMenu] " + ChatColor.RED + "/!\\"
+                    + ChatColor.RESET + "Failed to load legacies menu: ["
+                    + e.getClass().getName() + "] "
+                    + e.getMessage());
+        }
 
         Objects.requireNonNull(getCommand("menuExists")).setExecutor(new CheckMenuExistsCommand(guiManager));
         Objects.requireNonNull(getCommand("menuList")).setExecutor(new ListMenusCommand(guiManager));

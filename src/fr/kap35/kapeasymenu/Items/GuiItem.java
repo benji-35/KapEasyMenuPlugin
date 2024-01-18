@@ -29,6 +29,10 @@ public class GuiItem implements IGuiItem {
         this.plugin = plugin;
         item = new ItemStack(material, 1);
     }
+    public GuiItem(JavaPlugin plugin, ItemStack item) {
+        this.plugin = plugin;
+        this.item = item;
+    }
 
     public GuiItem(Material material) {
         this.plugin = null;

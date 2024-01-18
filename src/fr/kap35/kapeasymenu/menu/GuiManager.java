@@ -1,18 +1,15 @@
-package fr.kap35.kapeasymenu.Menu;
+package fr.kap35.kapeasymenu.menu;
 
 import fr.kap35.kapeasymenu.Interfaces.IGuiManager;
 import fr.kap35.kapeasymenu.KapEasyMenu;
 import fr.kap35.kapeasymenu.debug.Debug;
 import fr.kap35.kapeasymenu.saves.SaveSystem;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class GuiManager implements IGuiManager {
@@ -21,7 +18,6 @@ public class GuiManager implements IGuiManager {
     Map<String, IGuiMenu> menus = new HashMap<>();
     KapEasyMenu plugin;
     SaveSystem saveSystem;
-    private int maxWaitingTime = 2;
 
     public GuiManager(KapEasyMenu plugin) {
         debug = new Debug();
@@ -46,7 +42,6 @@ public class GuiManager implements IGuiManager {
     }
 
     public void openMenu(Player player, String name) {
-        player.closeInventory();
         if (menus.containsKey(name) && menus.get(name) != null) {
             IGuiMenu menu = menus.get(name);
             if (menu.isEnable()) {
@@ -88,13 +83,7 @@ public class GuiManager implements IGuiManager {
 
     public void onInventoryClose(InventoryCloseEvent event) {
         for (IGuiMenu menu : getMenus()) {
-            if (menu.getTitle().equals(event.getView().getTitle())) {
-                menu.onCloseMenu((Player) event.getPlayer());
-                if (menu instanceof GuiMenuPages) {
-                    GuiMenuPages _menu = (GuiMenuPages) menu;
-                    Player player = (Player) event.getPlayer();
-                }
-            }
+            menu.closingMenu((Player) event.getPlayer());
         }
     }
 
@@ -106,21 +95,5 @@ public class GuiManager implements IGuiManager {
     }
 
     public void checkReaders() {
-        for (IGuiMenu menu : getMenus()) {
-            Player[] readers = menu.getReaders();
-            for (Player player : readers) {
-                if (player == null) {
-                    menu.__removeReader(player);
-                } else {
-                    if (player.getOpenInventory() != null) {
-                        if (!player.getOpenInventory().getTitle().equals(menu.getTitle())) {
-                            menu.__removeReader(player);
-                        }
-                    } else {
-                        menu.__removeReader(player);
-                    }
-                }
-            }
-        }
     }
 }
