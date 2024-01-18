@@ -9,6 +9,7 @@ import fr.kap35.kapeasymenu.commands.OpenMenuCommand;
 import fr.kap35.kapeasymenu.commands.SetActiveMenuCommand;
 import fr.kap35.kapeasymenu.listeners.InventoryAction;
 import fr.kap35.kapeasymenu.menu.example.LegacyChest;
+import fr.kap35.kapeasymenu.menu.example.LegacyFurnace;
 import fr.kap35.kapeasymenu.menu.example.LegacyPaginationChest;
 import fr.kap35.kapeasymenu.menu.exception.CannotPlaceItemException;
 import fr.kap35.kapeasymenu.menu.exception.MenuSizeException;
@@ -33,6 +34,7 @@ public class KapEasyMenu extends JavaPlugin {
         guiManager = new GuiManager(this);
 
         try {
+            guiManager.registerMenus(new LegacyFurnace(this), "LegacyFurnaceMenu");
             guiManager.registerMenus(new LegacyChest(this), "LegacyChestMenu");
             guiManager.registerMenus(new LegacyPaginationChest(this), "LegacyPaginationChestMenu");
         } catch (MenuSizeException | CannotPlaceItemException e) {
