@@ -1,9 +1,9 @@
 version
- 2.0.0
+ 2.0.1
 dangerous
- 0.0.0&&&Fix to update
- &0.0.0&0.9.0&FIX to update 2
 majors
  2.0.0&&&New menu implementing system
  2.0.1&&&Add furnace menu
+ 2.0.2&&&Fix versioning debug
 minors
+ 2.0.2&&&Add item with page specification for menu with pages
