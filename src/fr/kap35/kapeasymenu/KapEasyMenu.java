@@ -20,6 +20,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.List;
 import java.util.Objects;
 
 public class KapEasyMenu extends JavaPlugin {
@@ -70,28 +71,31 @@ public class KapEasyMenu extends JavaPlugin {
         }
         Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "/!\\" + ChatColor.DARK_BLUE + "[KapEasyMenu]" + ChatColor.YELLOW + "/!\\ " +
                 ChatColor.RESET + "plugin is not up to date, current: " + versioningService.getCurrentVersion().version + ", latest: " + versioningService.getLatestVersion().version);
-        if (!versioningService.getDangerous().isEmpty()) {
+        List<VersionDifferenceDto> dangerous = versioningService.getDangerous();
+        List<VersionDifferenceDto> majors = versioningService.getMajors();
+        List<VersionDifferenceDto> minors = versioningService.getMinors();
+        if (!dangerous.isEmpty()) {
             Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "/!\\" + ChatColor.DARK_BLUE + "[KapEasyMenu]" + ChatColor.RED + "/!\\ " +
                     "List of dangerous issues to fix with update:");
-            for(int i = 0; i < versioningService.getDangerous().size(); i++) {
-                VersionDifferenceDto version = versioningService.getDangerous().get(i);
-                Bukkit.getConsoleSender().sendMessage("    - " + version.description);
+            for(int i = 0; i < dangerous.size(); i++) {
+                VersionDifferenceDto version = dangerous.get(i);
+                Bukkit.getConsoleSender().sendMessage("    - " + version.description + " [" + version.getVersionToDebug() + "]");
             }
         }
-        if (!versioningService.getMajors().isEmpty()) {
+        if (!majors.isEmpty()) {
             Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "/!\\" + ChatColor.DARK_BLUE + "[KapEasyMenu]" + ChatColor.YELLOW + "/!\\ " +
                     "List of majors update to catch:");
-            for(int i = 0; i < versioningService.getMajors().size(); i++) {
-                VersionDifferenceDto version = versioningService.getMajors().get(i);
-                Bukkit.getConsoleSender().sendMessage("    - " + version.description);
+            for(int i = 0; i < majors.size(); i++) {
+                VersionDifferenceDto version = majors.get(i);
+                Bukkit.getConsoleSender().sendMessage("    - " + version.description + " [" + version.getVersionToDebug() + "]");
             }
         }
-        if (!versioningService.getMinors().isEmpty()) {
+        if (!minors.isEmpty()) {
             Bukkit.getConsoleSender().sendMessage(ChatColor.BLUE + "/!\\" + ChatColor.DARK_BLUE + "[KapEasyMenu]" + ChatColor.BLUE + "/!\\ " +
                     "List of minors update to catch:");
-            for(int i = 0; i < versioningService.getMinors().size(); i++) {
-                VersionDifferenceDto version = versioningService.getMinors().get(i);
-                Bukkit.getConsoleSender().sendMessage("    - " + version.description);
+            for(int i = 0; i < minors.size(); i++) {
+                VersionDifferenceDto version = minors.get(i);
+                Bukkit.getConsoleSender().sendMessage("    - " + version.description + " [" + version.getVersionToDebug() + "]");
             }
         }
     }

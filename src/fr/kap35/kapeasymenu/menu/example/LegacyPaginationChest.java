@@ -2,9 +2,11 @@ package fr.kap35.kapeasymenu.menu.example;
 
 import fr.kap35.kapeasymenu.Items.BasicItemsGui;
 import fr.kap35.kapeasymenu.Items.GuiItem;
+import fr.kap35.kapeasymenu.Items.IGuiItem;
 import fr.kap35.kapeasymenu.menu.exception.CannotPlaceItemException;
 import fr.kap35.kapeasymenu.menu.exception.MenuSizeException;
 import fr.kap35.kapeasymenu.menu.legacy.ChestPaginationMenu;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -34,5 +36,11 @@ public class LegacyPaginationChest extends ChestPaginationMenu {
     @Override
     protected void onOpenMenu(Player player) {
         player.sendMessage("You opened menu " + getTitle());
+        IGuiItem item = new GuiItem(Material.BARRIER).setDisableEvent(true);
+        try {
+            addItem(player, item, 1, 6);
+        } catch (Exception e) {
+            player.sendMessage("Error while placing random item (" + e.getClass().getName() + "): " + e.getMessage());
+        }
     }
 }

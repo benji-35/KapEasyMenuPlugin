@@ -7,4 +7,11 @@ public class VersionDifferenceDto {
     public Version fromVersion;
     public Version sinceVersion;
     public Version toVersion;
+
+    public String getVersionToDebug() {
+        if (fromVersion != null) {
+            return fromVersion.version;
+        }
+        return  sinceVersion.version + " - " + toVersion.version;
+    }
 }

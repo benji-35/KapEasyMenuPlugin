@@ -26,7 +26,7 @@ public class VersioningSystem implements IVersioningService {
     }
     @Override
     public boolean isLatestVersion() {
-        return getLatestVersion().isEquals(getCurrentVersion());
+        return getLatestVersion().isBefore(local.getCurrentVersion()) || getLatestVersion().isEquals(local.getCurrentVersion());
     }
     @Override
     public Version getLatestVersion() {
@@ -50,7 +50,7 @@ public class VersioningSystem implements IVersioningService {
 
         for(VersionDifferenceDto dto : list) {
             if (dto.fromVersion != null) {
-                if (dto.fromVersion.isEquals(local.getCurrentVersion())) {
+                if (dto.fromVersion.isAfter(local.getCurrentVersion()) || dto.fromVersion.isEquals(local.getCurrentVersion())) {
                     result.add(dto);
                 }
                 continue;
@@ -116,8 +116,9 @@ public class VersioningSystem implements IVersioningService {
         private List<VersionDifferenceDto> getDtoDifferences(String key) {
             List<VersionDifferenceDto> result = new ArrayList<>();
             boolean inKey = false;
-            if (lines == null)
+            if (lines == null) {
                 return new ArrayList<>();
+            }
             for (String line : lines) {
                 if (!inKey) {
                     if (line.startsWith(key)) {
@@ -125,8 +126,11 @@ public class VersioningSystem implements IVersioningService {
                     }
                     continue;
                 }
-                if (!line.startsWith(" "))
+                if (line.trim().startsWith("#"))
                     continue;
+                if (!line.startsWith(" "))
+                    break;
+                line = line.trim();
                 String[] parts = line.split("&", 4);
                 if (parts.length != 4)
                     continue;
