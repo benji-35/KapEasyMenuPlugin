@@ -10,7 +10,7 @@ Minecraft Plugin 1.19.3 made to create easy inventory menus with item actions
 <h5>
     <a href="https://kap35.gitbook.io/kap-easy-menu-plugin/">The documentation</a> to understand how to use the plugin
     <br>
-    <a href="">Link to download</a> the plugin.
+    <a href="https://dev.bukkit.org/projects/kap-easy-menu/">Link to download</a> the plugin.
 </h5>
 <br>
 <br>
